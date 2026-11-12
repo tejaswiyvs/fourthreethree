@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manchester United: a team portrait, 2014–2026 · FourThreeThree</title>
+  <meta name="description" content="Twelve seasons and ten managers of Manchester United in underlying numbers: xG, pressing, deep completions, zone dominance and expected threat.">
+  <meta property="og:title" content="Manchester United: a team portrait, 2014–2026">
+  <meta property="og:description" content="Twelve seasons, ten managers: xG, pressing, deep completions, zone dominance and expected threat.">
+  <meta property="og:type" content="article">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/site.css">
+  <style>
+    .po-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--cds-gap-md);margin-top:var(--cds-gap-md)}
+    .po-tile{border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-md);position:relative}
+    .po-tile .lab{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);line-height:1.3;min-height:2.6em}
+    .po-tile .val{font-family:var(--font-anthropic-serif);font-size:28px;line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums}
+    .po-tile .val small{font-family:var(--font-anthropic-sans);font-size:12px;color:var(--color-fg-muted);margin-left:4px}
+    .po-tile .rank{display:inline-block;vertical-align:middle;margin-left:8px;font-family:var(--font-anthropic-sans);font-size:11px;font-weight:600;padding:2px 7px;border-radius:999px;background:color-mix(in srgb,var(--series-1) 14%,transparent);color:var(--color-fg)}
+    .po-tile .rank.top{background:color-mix(in srgb,var(--color-ok) 22%,transparent)}
+    .po-tile svg{display:block;margin-top:6px}
+    .po-group{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--color-fg-muted);margin:var(--cds-gap-lg) 0 0}
+    .po-grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr));gap:var(--cds-gap-lg);margin-top:var(--cds-gap-md)}
+    .po-grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:var(--cds-gap-lg);margin-top:var(--cds-gap-md)}
+    .po-fig{position:relative;min-width:0}
+    .po-fig h3{font-size:var(--cds-font-size-body);font-weight:var(--cds-font-weight-medium);margin:0 0 2px}
+    .po-fig p{margin:0 0 8px}
+    .po-fig svg text{fill:var(--cds-text-secondary);font-size:var(--cds-font-size-caption);font-family:var(--font-anthropic-sans)}
+    .po-fig svg .strong{fill:var(--color-fg);font-weight:600}
+    .po-stats{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin-top:6px}
+    .po-stats b{color:var(--color-fg);font-variant-numeric:tabular-nums}
+    .po-timeline{position:relative;min-height:230px}
+    .po-tabs{display:inline-flex;border:1px solid var(--color-border-line);border-radius:8px;overflow:hidden;margin-bottom:var(--cds-gap-md)}
+    .po-tabs button{font:inherit;font-size:var(--cds-font-size-caption);border:0;background:transparent;color:var(--color-fg-muted);padding:6px 12px;cursor:pointer}
+    .po-tabs button[aria-pressed=true]{background:var(--color-fg);color:var(--color-bg)}
+    .po-note{border-left:3px solid var(--series-1);padding:2px 0 2px 12px;margin:var(--cds-gap-md) 0}
+    .po-findings{margin:var(--cds-gap-sm) 0 0;padding-left:1.2em}
+    .po-findings li{margin:4px 0;line-height:1.5}
+    .po-key{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:baseline}
+      .mu-legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:0 0 8px}
+    .mu-legend span{display:inline-flex;align-items:center;gap:5px}
+    .mu-legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+  </style>
+  <script src="../assets/d3.v7.min.js"></script>
+  <script src="../assets/dash.js"></script>
+  <script src="data.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../">Four<b>Three</b>Three</a>
+    <nav class="site-nav"><a href="../">All dashboards</a><a href="#method">Method</a></nav>
+  </div>
+</header>
+
+<main class="site-main">
+<div class="pi-wrap">
+
+  <header id="intro">
+    <h1 class="pi-title">Manchester United: a team portrait, 2014–2026</h1>
+    <p class="pi-lede">Twelve Premier League seasons and ten managers, from Louis van Gaal to Michael Carrick, in underlying numbers. It uses match-level xG, pressing and deep completions for every league game, full event data (every pass, press and touch) for 2015–16, and season-level event counts for the two most recent seasons.</p>
+    <ul class="po-findings pi-muted">
+      <li><b>The press drained away over seven years.</b> United had the league's most intense press in 2014–15 (Understat PPDA 7.1, 1st of 20). It weakened season by season to 12.8 (12th) in 2021–22 and has sat around 10–12 since.</li>
+      <li><b>Van Gaal's side had the ball, not the chances.</b> In 2015–16 United had the league's highest share of passes and field tilt but ranked 20th of 20 for the speed of its attacks and 13th for xG.</li>
+      <li><b>2023–24 was the defensive low point.</b> Ten Hag's second season conceded 1.83 npxG per game, 15th in the league and the worst of the twelve seasons, while results flattered the underlying numbers by 16 points.</li>
+      <li><b>Results have often run ahead of the process, or behind it.</b> Mourinho in 2017–18 finished 2nd with the 6th-best npxG difference. The 2024–25 side finished 15th, ten points below its expected total. Carrick's 2026 run took 2.29 points per game from about 1.7 expected.</li>
+    </ul>
+  </header>
+
+  <section class="pi-card" id="timeline">
+    <h2 class="pi-h2">1 · Ten managers, twelve seasons</h2>
+    <p class="pi-muted">Each band is a manager's spell in charge (caretakers in a lighter shade). League finish and trophies for each season sit underneath.</p>
+    <div class="po-fig" data-draw="timeline" style="min-height:240px"></div>
+  </section>
+
+  <section class="pi-card" id="arc">
+    <h2 class="pi-h2">2 · The arc: every league match since August 2014</h2>
+    <p class="pi-muted">Understat data for all 456 Premier League matches. Lines are 10-match rolling averages; shaded bands mark each manager. PPDA per match is available up to April 2025.</p>
+    <div class="po-tabs" role="group" aria-label="Metric">
+      <button data-arc="xg" aria-pressed="true">xG for vs against</button>
+      <button data-arc="ppda" aria-pressed="false">Pressing (PPDA)</button>
+      <button data-arc="deep" aria-pressed="false">Deep completions</button>
+      <button data-arc="pts" aria-pressed="false">Points vs expected points</button>
+    </div>
+    <div class="po-fig" data-draw="arcline" style="min-height:360px"></div>
+  </section>
+
+  <section class="pi-card" id="seasons">
+    <h2 class="pi-h2">3 · Season by season</h2>
+    <p class="pi-muted">Per-game averages with United's league rank in brackets (1 = best). The dashed line is the average of that season's six best sides by npxG difference, as a "top-six standard". PPDA is Understat's: lower means a more intense press.</p>
+    <div class="po-fig" data-draw="seasonbars" style="min-height:460px"></div>
+    <div class="po-grid2">
+      <div class="po-fig"><h3>The route map: chances created vs conceded</h3><p class="pi-muted">Each dot is a season: non-penalty xG for (across) against xG conceded (up the page is better, so the axis is flipped). Top right is where title contenders live.</p><div data-draw="route" style="min-height:380px"></div></div>
+      <div class="po-fig"><h3>League finish vs what the chances deserved</h3><p class="pi-muted">Points won (bar) and Understat expected points (mark) per season. Expected points simulate each match from its shot xG.</p><div data-draw="ptsgap" style="min-height:380px"></div></div>
+    </div>
+  </section>
+
+  <section class="pi-card" id="managers">
+    <h2 class="pi-h2">4 · The managers compared</h2>
+    <p class="pi-muted">Averages per league match for each spell of 10 or more games. Each column has its own scale; the grey tick is the twelve-season United average. Caretaker spells of one to three games are left out.</p>
+    <div class="po-fig" data-draw="eras" style="min-height:330px"></div>
+    <div class="po-note pi-muted">Squads, budgets and the league around them changed hugely across these spells, so this describes how United played and performed under each manager, not how good each coach is. Amorim's PPDA covers only his first 20 matches, because the per-match source stops in April 2025.</div>
+  </section>
+
+  <section class="pi-card" id="sb1516">
+    <h2 class="pi-h2">5 · Anatomy of a season: 2015–16 under Van Gaal</h2>
+    <p class="pi-muted">The one United season with full public event data: every Premier League match from StatsBomb. Tiles show United's per-match value, its rank among the 20 sides (1 = most of that thing, or best for PPDA and xG against), and where that sits between the league's lowest and highest team.</p>
+    <div data-draw="tiles-sb"></div>
+    <div class="po-grid2">
+      <div class="po-fig"><h3>Zone dominance</h3><p class="pi-muted">United's share of all touches in each zone across the season (attacking left to right). Blue zones United owned (over 55% of touches), orange zones the opponent did (under 45%), grey is contested.</p><div data-draw="zone-mu"></div></div>
+      <div class="po-fig"><h3>Where they pressed</h3><p class="pi-muted">Pressure events per match by area. Darker means more pressing there.</p><div data-draw="press-mu"></div></div>
+      <div class="po-fig"><h3>Shape in possession</h3><p class="pi-muted">Positional passing network: each node is a position at its median touch location; lines show average completed passes per match between positions (1.5+ shown). Hover for who played there.</p><div data-draw="net-mu"></div></div>
+      <div class="po-fig"><h3>Where the threat came from</h3><p class="pi-muted">Expected threat (xT) added by United's passes and carries, by the zone each move started in, per match.</p><div data-draw="xtzone-mu"></div></div>
+      <div class="po-fig"><h3>Full-backs</h3><p class="pi-muted">Touch maps for the right and left back, per match, against the average Premier League full-back that season.</p><div data-draw="fb-mu"></div></div>
+      <div class="po-fig"><h3>Goal kicks</h3><p class="pi-muted">Where each goal kick landed. Short (under 32 yards) in blue, long in grey, lost possession outlined red.</p><div data-draw="gk-mu"></div></div>
+      <div class="po-fig"><h3>Shots for and against</h3><p class="pi-muted">Every non-penalty shot, sized by xG. Goals filled.</p><div data-draw="shots-mu"></div></div>
+      <div class="po-fig"><h3>Who created the threat</h3><p class="pi-muted">xT added per 90 minutes from passes and carries (players with 900+ minutes).</p><div data-draw="xtplayers-mu"></div></div>
+    </div>
+    <div class="po-fig" style="margin-top:var(--cds-gap-lg)"><h3>Match by match</h3><p class="pi-muted">xG for (up) and against (down) in each league game, with the result. The dashed line is PPDA (right scale, lower = more pressing).</p><div data-draw="matches-mu" style="min-height:300px"></div></div>
+  </section>
+
+  <section class="pi-card" id="modern">
+    <h2 class="pi-h2">6 · The recent side: 2024–25 and 2025–26</h2>
+    <p class="pi-muted">There's no public event data for these seasons, so this uses season totals of on-ball events (SofaScore) and Understat's xG. Each tile shows 2025–26 with its league rank, and 2024–25 underneath. Ranks: 1 = most of that thing, or fewest for goals conceded, long balls and long goalkeeper passes.</p>
+    <div data-draw="tiles-modern"></div>
+    <div class="po-grid2">
+      <div class="po-fig"><h3>Amorim vs Carrick inside 2025–26</h3><p class="pi-muted">The same squad, split at the change of manager in January 2026. Per-match Understat averages.</p><div data-draw="split" style="min-height:280px"></div></div>
+      <div class="po-fig"><h3>Who made the chances</h3><p class="pi-muted">Non-penalty xG plus expected assists per 90 minutes (players with 900+ league minutes). Toggle the season.</p>
+        <div class="po-tabs" role="group" aria-label="Season"><button data-ps="2025-26" aria-pressed="true">2025–26</button><button data-ps="2024-25" aria-pressed="false">2024–25</button></div>
+        <div data-draw="players" style="min-height:300px"></div></div>
+    </div>
+  </section>
+
+  <details class="pi-card pi-details" id="method">
+    <summary>Method, definitions and sources</summary>
+    <dl>
+      <dt>Understat</dt><dd>Match-level xG, npxG, deep completions (passes completed within about 20 yards of goal) and expected points for all 456 league matches since August 2014. PPDA (opponent passes in their own 60% of the pitch, divided by our defensive actions there) per match up to April 2025, and per season for all twelve seasons, with league ranks from all 20 teams. Sources: public GitHub mirrors of Understat (MichaelKolby1/epl_results_prediction, AbrarHossainHimself/Understat_scraping_project, vaastav/Fantasy-Premier-League, nabilo999/Scout-DB). The overlapping sources agree exactly on xG.</dd>
+      <dt>Managers</dt><dd>Matches are assigned to a manager by date. Caretaker spells: Carrick (2021, 2 league games), Rangnick (interim, 24), Van Nistelrooy (2), Fletcher (1). Carrick from 13 January 2026 counts as his own spell.</dd>
+      <dt>Event data, 2015–16</dt><dd>StatsBomb Open Data, all 380 Premier League matches. The definitions match the Pochettino portrait: possession sequences use StatsBomb possession chains; direct attacks start in the own half and reach a shot or box touch within 15 seconds; event-data PPDA counts tackles, interceptions and fouls; counter-presses are pressures within five seconds of losing the ball; zone dominance is the share of on-ball touches in 30 zones; xT is a 16×12 model trained on every pass and carry that season.</dd>
+      <dt>Recent seasons</dt><dd>Season totals of passes, long balls, possession won in the attacking third, tackles, interceptions, crosses and dribbles from SofaScore, combined with Understat xG and xG chain figures. Player figures are Understat season totals.</dd>
+      <dt>Top-six standard</dt><dd>For each season, the average of the six teams with the best npxG difference that year.</dd>
+    </dl>
+    <p>Caveats: Understat's PPDA and the event-data PPDA use different formulas, so compare each only with itself. Expected points are a model, not a verdict. The 2026–27 season is in progress and not included.</p>
+  </details>
+</div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">Data: <a href="https://understat.com">Understat</a> via public GitHub mirrors; <a href="https://github.com/statsbomb/open-data">StatsBomb Open Data</a> (event data © StatsBomb, used under their open data terms); SofaScore season aggregates. Analysis and xT model by FourThreeThree.</div>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
