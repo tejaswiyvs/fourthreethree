@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mauricio Pochettino: a data portrait · FourThreeThree</title>
+  <meta name="description" content="How Mauricio Pochettino's teams play, and how that changed from Tottenham to PSG, Chelsea and the USMNT: pressing, possession sequences, zone dominance, xG and expected threat.">
+  <meta property="og:title" content="Mauricio Pochettino: a data portrait">
+  <meta property="og:description" content="Pressing, sequences, zone dominance, xG and xT across Tottenham, PSG, Chelsea and the USMNT.">
+  <meta property="og:type" content="article">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/site.css">
+  <style>
+    .po-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--cds-gap-md);margin-top:var(--cds-gap-md)}
+    .po-tile{border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-md);position:relative}
+    .po-tile .lab{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);line-height:1.3;min-height:2.6em}
+    .po-tile .val{font-family:var(--font-anthropic-serif);font-size:28px;line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums}
+    .po-tile .val small{font-family:var(--font-anthropic-sans);font-size:12px;color:var(--color-fg-muted);margin-left:4px}
+    .po-tile .rank{display:inline-block;vertical-align:middle;margin-left:8px;font-family:var(--font-anthropic-sans);font-size:11px;font-weight:600;padding:2px 7px;border-radius:999px;background:color-mix(in srgb,var(--series-1) 14%,transparent);color:var(--color-fg)}
+    .po-tile .rank.top{background:color-mix(in srgb,var(--color-ok) 22%,transparent)}
+    .po-tile svg{display:block;margin-top:6px}
+    .po-group{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--color-fg-muted);margin:var(--cds-gap-lg) 0 0}
+    .po-grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr));gap:var(--cds-gap-lg);margin-top:var(--cds-gap-md)}
+    .po-grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:var(--cds-gap-lg);margin-top:var(--cds-gap-md)}
+    .po-fig{position:relative;min-width:0}
+    .po-fig h3{font-size:var(--cds-font-size-body);font-weight:var(--cds-font-weight-medium);margin:0 0 2px}
+    .po-fig p{margin:0 0 8px}
+    .po-fig svg text{fill:var(--cds-text-secondary);font-size:var(--cds-font-size-caption);font-family:var(--font-anthropic-sans)}
+    .po-fig svg .strong{fill:var(--color-fg);font-weight:600}
+    .po-stats{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin-top:6px}
+    .po-stats b{color:var(--color-fg);font-variant-numeric:tabular-nums}
+    .po-timeline{position:relative;min-height:230px}
+    .po-tabs{display:inline-flex;border:1px solid var(--color-border-line);border-radius:8px;overflow:hidden;margin-bottom:var(--cds-gap-md)}
+    .po-tabs button{font:inherit;font-size:var(--cds-font-size-caption);border:0;background:transparent;color:var(--color-fg-muted);padding:6px 12px;cursor:pointer}
+    .po-tabs button[aria-pressed=true]{background:var(--color-fg);color:var(--color-bg)}
+    .po-note{border-left:3px solid var(--series-1);padding:2px 0 2px 12px;margin:var(--cds-gap-md) 0}
+    .po-findings{margin:var(--cds-gap-sm) 0 0;padding-left:1.2em}
+    .po-findings li{margin:4px 0;line-height:1.5}
+    .po-key{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:baseline}
+  </style>
+  <script src="../assets/d3.v7.min.js"></script>
+  <script src="../assets/dash.js"></script>
+  <script src="data.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../">Four<b>Three</b>Three</a>
+    <nav class="site-nav"><a href="../">All dashboards</a><a href="#method">Method</a></nav>
+  </div>
+</header>
+
+<main class="site-main">
+<div class="pi-wrap">
+
+  <header id="intro">
+    <h1 class="pi-title">Mauricio Pochettino: a data portrait</h1>
+    <p class="pi-lede">How Pochettino's teams play, and how that changed over a decade: from the relentless pressing of his early Tottenham, through PSG's possession-heavy star team, a high-event Chelsea season and the US national team. Built from event data (every pass, press and touch), Understat's match-level xG and pressing numbers, and international results.</p>
+    <ul class="po-findings pi-muted">
+      <li><b>Peak Spurs pressed harder than anyone.</b> In 2015–16 they allowed the fewest opponent passes per defensive action in the Premier League (lowest PPDA), took the most shots, and played the most short goal kicks.</li>
+      <li><b>The press faded steadily.</b> Understat's PPDA rose every season from 2015–16 to his 2019 exit (6.4 → 11.0), while deep completions climbed: control replaced pressure.</li>
+      <li><b>PSG was a different team.</b> Twice as many 10-pass moves as peak Spurs, slower attacks and 77% short goal kicks: possession first, press second.</li>
+      <li><b>Chelsea was his most open side.</b> His highest npxG per game (1.89) and his worst npxG against (1.55).</li>
+    </ul>
+  </header>
+
+  <!-- 1. Timeline -->
+  <section class="pi-card" id="career">
+    <h2 class="pi-h2">1 · Career timeline</h2>
+    <p class="pi-muted">Each bar is a job. League finish and trophies sit on the bar. Espanyol and Southampton are shown for context only; the rest of the page starts at Tottenham.</p>
+    <div class="po-timeline" data-draw="timeline"></div>
+  </section>
+
+  <!-- 2. Career arc -->
+  <section class="pi-card" id="arc">
+    <h2 class="pi-h2">2 · The arc in underlying numbers: Tottenham 2014–2019 and Chelsea 2023–24</h2>
+    <p class="pi-muted">Understat match data for every league game he managed at Spurs (through November 2019) and Chelsea. Lines are 10-match rolling averages of non-penalty xG for and against. Shaded areas mark seasons.</p>
+    <div class="po-tabs" role="group" aria-label="Metric">
+      <button data-arc="xg" aria-pressed="true">xG for vs against</button>
+      <button data-arc="ppda" aria-pressed="false">Pressing (PPDA)</button>
+      <button data-arc="deep" aria-pressed="false">Deep completions</button>
+      <button data-arc="pts" aria-pressed="false">Points vs expected points</button>
+    </div>
+    <div class="po-fig" data-draw="arcline" style="min-height:340px"></div>
+    <h3 class="pi-h2" style="margin-top:var(--cds-gap-lg)">Season by season</h3>
+    <p class="pi-muted">Per-game averages, with the league rank in brackets (1 = best). PPDA is Understat's definition: lower means a more intense press. Chelsea 2023–24 has no PPDA in the source data.</p>
+    <div class="po-fig" data-draw="seasonbars" style="min-height:300px"></div>
+  </section>
+
+  <!-- 3. Spurs 15-16 -->
+  <section class="pi-card" id="spurs">
+    <h2 class="pi-h2">3 · Anatomy of peak Spurs: 2015–16</h2>
+    <p class="pi-muted">Every Premier League match of 2015–16 from StatsBomb event data. Tiles show Spurs' per-match value, their rank among the 20 Premier League sides (1 = most of that thing, or best for PPDA and xG against), and where that sits between the league's lowest and highest team.</p>
+    <div data-draw="tiles-spurs"></div>
+    <div class="po-grid2">
+      <div class="po-fig"><h3>Zone dominance</h3><p class="pi-muted">Spurs' share of all touches in each zone, across the season (attacking left to right). Blue zones Spurs owned (over 55% of touches), orange zones the opponent did (under 45%), grey is contested.</p><div data-draw="zone-spurs"></div></div>
+      <div class="po-fig"><h3>Where they pressed</h3><p class="pi-muted">Pressure events per match by area. Darker means more pressing there.</p><div data-draw="press-spurs"></div></div>
+      <div class="po-fig"><h3>Shape in possession</h3><p class="pi-muted">Positional passing network: each node is a position at its median touch location, lines are average completed passes per match between positions (1.5+ shown). Hover for who played there.</p><div data-draw="net-spurs"></div></div>
+      <div class="po-fig"><h3>Where the threat came from</h3><p class="pi-muted">Expected threat (xT) added by Spurs' passes and carries, by the zone each move started in, per match. xT measures how much a move raises the chance of scoring soon after.</p><div data-draw="xtzone-spurs"></div></div>
+      <div class="po-fig"><h3>Full-backs</h3><p class="pi-muted">Touch maps for the right and left back, per match. Compared with the average Premier League full-back that season.</p><div data-draw="fb-spurs"></div></div>
+      <div class="po-fig"><h3>Goal kicks</h3><p class="pi-muted">Where each goal kick landed. Short (under 32 yards) in blue, long in grey.</p><div data-draw="gk-spurs"></div></div>
+      <div class="po-fig"><h3>Shots for and against</h3><p class="pi-muted">Every non-penalty shot, sized by xG. Goals filled.</p><div data-draw="shots-spurs"></div></div>
+      <div class="po-fig"><h3>Who created the threat</h3><p class="pi-muted">xT added per 90 minutes from passes and carries (players with 900+ minutes).</p><div data-draw="xtplayers-spurs"></div></div>
+    </div>
+    <div class="po-fig" style="margin-top:var(--cds-gap-lg)"><h3>Match by match</h3><p class="pi-muted">xG for (up) and against (down) in each league game, with the scoreline. The line is PPDA (right scale, lower = more pressing).</p><div data-draw="matches-spurs" style="min-height:300px"></div></div>
+  </section>
+
+  <!-- 4. PSG 21-22 -->
+  <section class="pi-card" id="psg">
+    <h2 class="pi-h2">4 · Anatomy of PSG: 2021–22</h2>
+    <p class="pi-muted">26 Ligue 1 matches from StatsBomb event data: the games released as part of their Messi collection, so mostly matches he played in. There's no league-wide data for this season, so PSG is compared with the opponents it faced in those games, and with peak Spurs.</p>
+    <div data-draw="tiles-psg"></div>
+    <div class="po-grid2">
+      <div class="po-fig"><h3>Zone dominance</h3><p class="pi-muted">PSG's share of touches in each zone across the 26 matches.</p><div data-draw="zone-psg"></div></div>
+      <div class="po-fig"><h3>Where they pressed</h3><p class="pi-muted">Pressure events per match by area.</p><div data-draw="press-psg"></div></div>
+      <div class="po-fig"><h3>Shape in possession</h3><p class="pi-muted">Positional passing network, as for Spurs.</p><div data-draw="net-psg"></div></div>
+      <div class="po-fig"><h3>Where the threat came from</h3><p class="pi-muted">xT added by passes and carries, by starting zone, per match.</p><div data-draw="xtzone-psg"></div></div>
+      <div class="po-fig"><h3>Full-backs</h3><p class="pi-muted">Touch maps for the right and left back, per match.</p><div data-draw="fb-psg"></div></div>
+      <div class="po-fig"><h3>Goal kicks</h3><p class="pi-muted">Where each goal kick landed.</p><div data-draw="gk-psg"></div></div>
+      <div class="po-fig"><h3>Shots for and against</h3><p class="pi-muted">Every non-penalty shot, sized by xG.</p><div data-draw="shots-psg"></div></div>
+      <div class="po-fig"><h3>Who created the threat</h3><p class="pi-muted">xT per 90 from passes and carries (900+ minutes in these matches).</p><div data-draw="xtplayers-psg"></div></div>
+    </div>
+    <div class="po-fig" style="margin-top:var(--cds-gap-lg)"><h3>Match by match</h3><p class="pi-muted">xG for and against in each of the 26 matches, with PPDA.</p><div data-draw="matches-psg" style="min-height:300px"></div></div>
+  </section>
+
+  <!-- 5. Evolution -->
+  <section class="pi-card" id="evolution">
+    <h2 class="pi-h2">5 · How the style evolved: Spurs 2015–16 vs PSG 2021–22</h2>
+    <p class="pi-muted">The same event-data measures for both teams. The grey band is the range of all 20 Premier League sides in 2015–16, so you can see where each team sits against a full league; the hollow mark is the average of PSG's opponents.</p>
+    <div class="po-fig" data-draw="evolution" style="min-height:600px"></div>
+    <div class="po-note pi-muted">Context matters: PSG had Messi, Neymar and Mbappé and faced weaker opponents on average, so more possession and longer sequences are partly the squad, not only the coach. The Understat arc in section 2 shows the same direction of travel within Spurs, with the same coach and broadly the same league.</div>
+  </section>
+
+  <!-- 6. USMNT -->
+  <section class="pi-card" id="usmnt">
+    <h2 class="pi-h2">6 · The USMNT: 2024 to now</h2>
+    <p class="pi-muted">International event data isn't public, so this section uses results, an Elo rating computed from every international match since 1872 (higher = stronger), and published xG for the 2026 World Cup.</p>
+    <div class="po-tiles" data-draw="usa-tiles"></div>
+    <div class="po-fig" style="margin-top:var(--cds-gap-lg)"><h3>Elo rating, 2022 to now</h3><p class="pi-muted">Each dot is a match, coloured by result. The vertical line marks his first game in charge. Elo rewards results relative to opponent strength, with World Cup and competitive games counting more than friendlies.</p><div data-draw="usa-elo" style="min-height:300px"></div></div>
+    <div class="po-grid2">
+      <div class="po-fig"><h3>Every match under Pochettino</h3><p class="pi-muted">Goal difference per match, bar coloured by result. Hover for opponent, score and opponent strength.</p><div data-draw="usa-results" style="min-height:260px"></div></div>
+      <div class="po-fig"><h3>2026 World Cup: xG for and against</h3><p class="pi-muted">Per-match expected goals, from ESPN's published figures. Scoreline above each pair.</p><div data-draw="usa-wc" style="min-height:260px"></div></div>
+    </div>
+  </section>
+
+  <details class="pi-card pi-details" id="method">
+    <summary>Method, definitions and sources</summary>
+    <dl>
+      <dt>Event data</dt><dd>StatsBomb Open Data: all 380 Premier League 2015–16 matches, and 26 PSG Ligue 1 matches from 2021–22. Pitch is 120×80 yards; each event is recorded in the acting team's attacking direction.</dd>
+      <dt>Possession sequences</dt><dd>StatsBomb possession chains. Completed passes per possession and 10+ pass possessions count only the team's own completed passes in its chain. Build-up attacks are 10+ pass possessions that reach a shot or a touch in the opposition box.</dd>
+      <dt>Direct attacks and speed</dt><dd>Direct attack: an open-play possession starting in the team's own half that reaches a shot or box touch within 15 seconds. Direct speed: median upfield metres per second across open-play possessions with three or more events.</dd>
+      <dt>PPDA</dt><dd>Event data: opponent open-play passes in their own 60% of the pitch, divided by the team's tackles, interceptions and fouls in that area. Understat uses a slightly different formula, so its values are lower; compare each source only with itself.</dd>
+      <dt>Pressures and counter-presses</dt><dd>StatsBomb pressure events; counter-presses are pressures within five seconds of losing the ball. High turnovers: possessions won within 40 metres of the opponent's goal.</dd>
+      <dt>Field tilt and zone dominance</dt><dd>Field tilt: a team's share of the final-third passes in a match. Zone dominance: share of all on-ball touches in each of 30 zones (6 lengthwise × 5 across), opponents flipped into the same direction.</dd>
+      <dt>Expected threat (xT)</dt><dd>A 16×12 grid model trained on every Premier League 2015–16 pass and carry (Karun Singh's method): the value of each zone is the chance it leads to a goal within the next few actions. A move's xT is the value at its end minus the value at its start; only positive gains are summed.</dd>
+      <dt>Understat</dt><dd>Match-level xG, npxG, PPDA, deep completions (passes completed within 20 yards of goal) and expected points, via public GitHub mirrors of Understat data. Tottenham matches up to his dismissal on 19 November 2019.</dd>
+      <dt>USMNT</dt><dd>Results from martj42/international_results. Elo uses a standard World Football Elo-style formula (home advantage, goal-difference multiplier, weights by competition) computed by FourThreeThree, so values won't match other Elo sites exactly. World Cup 2026 xG from ESPN.</dd>
+    </dl>
+    <p>Caveats: the PSG sample is 26 hand-picked matches rather than a full season; Spurs 2015–16 is a single season; and no public source tracks positional structure such as rotations or rest defence.</p>
+  </details>
+</div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">Data: <a href="https://github.com/statsbomb/open-data">StatsBomb Open Data</a> (event data © StatsBomb, used under their open data terms); <a href="https://understat.com">Understat</a> match data via public GitHub mirrors; <a href="https://github.com/martj42/international_results">martj42/international_results</a>; ESPN for World Cup 2026 xG. Analysis, xT model and Elo by FourThreeThree.</div>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
