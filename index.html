@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FourThreeThree · Football data dashboards</title>
+  <meta name="description" content="Data-driven football dashboards: playing styles, managers and tactics across Europe's top leagues.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="./">Four<b>Three</b>Three</a>
+    <nav class="site-nav"><a href="./">All dashboards</a></nav>
+  </div>
+</header>
+
+<main class="site-main">
+  <section class="hero">
+    <h1>Football, measured.</h1>
+    <p>Interactive dashboards on playing styles, managers and tactics across Europe's top five leagues.</p>
+  </section>
+
+  <section class="card-grid" id="dashboards"></section>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">© FourThreeThree. Exploratory analysis built on public football data; sources are credited on each dashboard.</div>
+</footer>
+
+<script>
+  /* Add a new dashboard by adding one entry here (newest first). */
+  const DASHBOARDS = [
+    {
+      href: 'pep-index/',
+      title: 'The Pep Index',
+      blurb: 'Which managers play most like Guardiola? Tempo, pressing and clustering across 192 Big-5 club-seasons.',
+      meta: 'Big-5 leagues · 2024–25 & 2025–26'
+    }
+  ];
+  const grid = document.getElementById('dashboards');
+  for (const d of DASHBOARDS) {
+    const a = document.createElement('a'); a.className = 'dash-card'; a.href = d.href;
+    const h = document.createElement('h2'); h.textContent = d.title;
+    const p = document.createElement('p'); p.textContent = d.blurb;
+    const m = document.createElement('div'); m.className = 'meta'; m.textContent = d.meta;
+    a.append(h, p, m); grid.appendChild(a);
+  }
+</script>
+</body>
+</html>

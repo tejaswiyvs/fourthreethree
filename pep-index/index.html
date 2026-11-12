@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Pep Index: which managers play like Guardiola? · FourThreeThree</title>
+  <meta name="description" content="A data-driven look at which Big-5 league managers play most like Pep Guardiola's Manchester City, across 192 club-seasons from 2024–25 and 2025–26.">
+  <meta property="og:title" content="The Pep Index: which managers play like Guardiola?">
+  <meta property="og:description" content="Tempo, pressing and clustering across 192 Big-5 club-seasons, measured against Pep's City.">
+  <meta property="og:type" content="article">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/d3.v7.min.js"></script>
+  <script src="../assets/dash.js"></script>
+  <script src="data.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../">Four<b>Three</b>Three</a>
+    <nav class="site-nav"><a href="../">All dashboards</a><a href="#method">Method</a></nav>
+  </div>
+</header>
+
+<main class="site-main">
+<div class="pi-wrap">
+  <header id="intro">
+    <h1 class="pi-title">The Pep Index: Big-5 managers by playing style</h1>
+    <p class="pi-lede"><b data-draw="top1">—</b> is the most Pep-like team-season in Europe's top five leagues across 2024–25 and 2025–26. The index rewards retention and long, slow possessions most: tempo carries the largest weight, and quick, direct or long-ball attacks count against a team. Tempo blends passes per shot with measures set pieces can't distort, so sides that score a lot from corners aren't mistaken for direct ones. Pep Guardiola's own 2025–26 City ranks <b data-draw="peprank">—</b>. Once you control for squad quality, the most Pep-like team-season is <b data-draw="topadj">—</b>.</p>
+    <p class="pi-muted">One row per club and league season: 192 club-seasons from 2024–25 and 2025–26, each credited to the coach who held the job for the largest share of that season. Scores are z-scores relative to each league and season, so every season is measured against its own league average.</p>
+  </header>
+
+  <section class="pi-card" id="fingerprint">
+    <h2 class="pi-h2">Pep's fingerprint: what makes City look like City</h2>
+    <p class="pi-muted">20 style features, each a z-score within its league and season. The two dots on each row are City 2024–25 and City 2025–26. A feature only counts as part of the signature if both seasons sit at least one standard deviation from average on the same side (marked "consistent"). Features marked ★ are the eight picked by forward selection: starting from nothing, it keeps adding whichever feature best separates City from every other side, until City's two seasons are each other's closest match.</p>
+    <div class="pi-sig" id="sig-chart" data-draw="sig"></div>
+    <div class="pi-cgrid">
+      <div>
+        <h3 class="pi-h2">How much each added feature helps</h3>
+        <p class="pi-muted">The gap between City and its 10 nearest rivals, as features are added in the order selection picked them. Once the curve flattens, extra features add little.</p>
+        <div class="pi-radar" id="sig-curve" data-draw="sigcurve" style="min-height:260px"></div>
+      </div>
+      <div>
+        <h3 class="pi-h2">What public data can't see</h3>
+        <p class="pi-muted">Fullback underlaps and inverted fullbacks, rotations between the lines, rest-defence shape and the positions players take up are all positional and need tracking or event-location data (Opta, StatsBomb, SkillCorner). The data here only counts actions, so it describes what City do with the ball, not the structure that makes it possible. Goal-kick routines are visible only indirectly, through the goalkeeper's long-ball share.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pi-card" id="style-map">
+    <h2 class="pi-h2">Style map: the Pep pole vs the Klopp pole</h2>
+    <p class="pi-muted">Horizontal: tempo (right means slow, patient attacks; left means heavy-metal, back-to-front attacks). Vertical: pressing (up means front-foot pressing). Top right is the Pep pole, top left the Klopp/Red Bull pole. Both axes are z-scores relative to each league, and zero is the league average. Klopp had no club in either season, so his corner shows the coaches who play closest to that style.</p>
+    <div class="pi-controls">
+      <select class="dash-select" id="q-x" aria-label="Horizontal axis">
+        <option value="tempo_axis">Horizontal = tempo (blended)</option>
+        <option value="tempo_patience">Horizontal = patience only (passes per shot)</option>
+        <option value="tempo_retention">Horizontal = retention only (set-piece-proof)</option>
+        <option value="build_axis">Horizontal = build-up style (v1)</option>
+      </select>
+      <select class="dash-select" id="q-y" aria-label="Pressing measure">
+        <option value="press_height">Pressing = how high the ball is won</option>
+        <option value="press_intensity">Pressing = defensive actions per opponent possession</option>
+      </select>
+      <select class="dash-select" id="q-league" aria-label="League">
+        <option value="">All leagues</option>
+        <option>Premier League</option><option>La Liga</option><option>Serie A</option><option>Bundesliga</option><option>Ligue 1</option>
+      </select>
+      <select class="dash-select" id="q-season" aria-label="Season">
+        <option value="">Both seasons</option>
+        <option>2025-26</option><option>2024-25</option>
+      </select>
+      <select class="dash-select" id="q-lab" aria-label="Labels">
+        <option value="notable">Label notable coaches</option>
+        <option value="all">Label every coach</option>
+      </select>
+      <select class="dash-select" id="q-coach" aria-label="Highlight a coach" data-draw="qcoach"></select>
+    </div>
+    <p class="pi-muted">Each dot is one club-season. A line joins a coach's two seasons, and its arrow points to 2025–26, including when the coach changed clubs (Alonso went from Leverkusen to Real Madrid). Pick a coach to see only their seasons.</p>
+    <div class="pi-quad" id="quad-chart" data-draw="quad"></div>
+    <div class="pi-legend">
+      <span><i data-lg="Premier League"></i>Premier League</span>
+      <span><i data-lg="La Liga"></i>La Liga</span>
+      <span><i data-lg="Serie A"></i>Serie A</span>
+      <span><i data-lg="Bundesliga"></i>Bundesliga</span>
+      <span><i data-lg="Ligue 1"></i>Ligue 1</span>
+    </div>
+    <div class="pi-qgrid">
+      <div class="pi-qcard"><h3>Pep pole</h3><p class="pi-muted">Slow, patient attacks, front-foot press</p><ol data-draw="qlist-pep"></ol></div>
+      <div class="pi-qcard"><h3>Klopp pole</h3><p class="pi-muted">Fast, back-to-front attacks, front-foot press</p><ol data-draw="qlist-klopp"></ol></div>
+      <div class="pi-qcard"><h3>Patient control</h3><p class="pi-muted">Slow attacks, mid or low block</p><ol data-draw="qlist-control"></ol></div>
+      <div class="pi-qcard"><h3>Direct, deep</h3><p class="pi-muted">Quick and direct, defend deep</p><ol data-draw="qlist-deep"></ol></div>
+    </div>
+    <p class="pi-muted">Each list is sorted by distance from the centre, so the purest examples of a style come first. Tempo blends two halves equally. Patience is passes per shot, adjusted for attacking output; set pieces drag it down, because corners produce shots with almost no passes. Retention is passes per match, pass accuracy, long-ball share and chipped-pass share, none of which set pieces affect. Pressing height is the share of ball recoveries made in the attacking third. Pressing intensity is tackles plus interceptions per match, divided by the opponent's share of possession (a stand-in for PPDA).</p>
+  </section>
+
+  <section class="pi-card" id="clusters">
+    <h2 class="pi-h2">Clustering: which sides play most like Pep's City</h2>
+    <p class="pi-muted">No weights or opinions here. 17 style features (retention, territory, directness, crossing, sequence length, tempo, pressing and dribbling), each a z-score within its league and season, compressed with PCA into 7 components that keep 92% of the information. Similarity is the distance to Pep's City in that space. The treble season (2022–23) isn't in this data, so Pep's 2024–25 and 2025–26 City seasons and their average serve as the reference.</p>
+    <div class="pi-controls">
+      <select class="dash-select" id="c-anchor" aria-label="Compare against">
+        <option value="template">Compare with: Pep's City (average of both seasons)</option>
+        <option value="2526">Compare with: City 2025-26</option>
+        <option value="2425">Compare with: City 2024-25</option>
+        <option value="compact">Compare with: City average, 8-feature fingerprint only</option>
+        <option value="net">Compare with: City average, adjusted for squad value</option>
+      </select>
+      <select class="dash-select" id="c-map" aria-label="Map type">
+        <option value="pca">Map: PCA (readable axes)</option>
+        <option value="umap">Map: UMAP (neighbourhoods)</option>
+      </select>
+    </div>
+    <div class="pi-quad" id="cluster-map" data-draw="cmap"></div>
+    <div class="pi-legend" data-draw="clegend"></div>
+    <p class="pi-muted">PCA axes: horizontal is control (possession, pass accuracy and territory against long balls and crosses), which accounts for 54% of the variation. Vertical is front-foot directness: up means territory and high regains with few passes per shot, down means patient. In UMAP the axes have no meaning; it only keeps similar teams close together. Rings mark Pep's City, and the 12 nearest sides are labelled.</p>
+    <div class="pi-cgrid">
+      <div>
+        <h3 class="pi-h2">The 30 nearest sides</h3>
+        <p class="pi-muted">Ordered by distance to the reference picked above, with the bar showing similarity (100% means the same shape of style). Click a side to compare it with City on the radar.</p>
+        <div class="pi-bars" id="nearest-chart" data-draw="cbars"></div>
+      </div>
+      <div>
+        <h3 class="pi-h2">Side vs Pep's City, feature by feature</h3>
+        <div class="pi-controls"><select class="dash-select" id="c-side" aria-label="Side to compare" data-draw="cside"></select></div>
+        <div class="pi-radar" id="side-radar" data-draw="cradar"></div>
+        <p class="pi-muted">Each spoke is one feature as a z-score within the side's league and season. The dashed ring is the league average (0) and the outer ring is +3. Grey shows Pep's City (average of both seasons) and colour shows the chosen side.</p>
+      </div>
+    </div>
+    <h3 class="pi-h2">What each cluster looks like</h3>
+    <p class="pi-muted">Each small radar is one cluster's average shape, with Pep's City in grey behind it. Same spokes and scale as the radar above.</p>
+    <div class="pi-multiples" id="cluster-radars" data-draw="cradars"></div>
+    <p class="pi-muted">Six clusters from Ward hierarchical clustering. Statistical tests (BIC, silhouette) show style is a continuum rather than neat groups, so treat the clusters as labels for regions of the map, not hard boxes.</p>
+  </section>
+
+  <section class="pi-card" id="ranking">
+    <h2 class="pi-h2">Ranking with raw metrics</h2>
+    <p class="pi-muted">Click a column header to sort. Coach names in amber held the job for less than 75% of the season, so those numbers mix in other coaches.</p>
+    <div class="pi-controls">
+      <select class="dash-select" id="f-league" aria-label="League">
+        <option value="">All leagues</option>
+        <option>Premier League</option><option>La Liga</option><option>Serie A</option><option>Bundesliga</option><option>Ligue 1</option>
+      </select>
+      <select class="dash-select" id="f-season" aria-label="Season">
+        <option value="">Both seasons</option>
+        <option>2025-26</option><option>2024-25</option>
+      </select>
+      <select class="dash-select" id="f-n" aria-label="Rows shown">
+        <option value="50">Top 50</option>
+        <option value="999">All 192</option>
+      </select>
+    </div>
+    <div class="pi-scroll">
+      <table class="pi-table" id="rank-table">
+        <thead><tr>
+          <th data-k="rank" aria-sort="ascending">#</th>
+          <th class="l" data-k="manager">Manager</th>
+          <th class="l" data-k="team">Club</th>
+          <th class="l" data-k="season">Season</th>
+          <th data-k="season_rank">Rank in season</th>
+          <th class="l" data-k="league">League</th>
+          <th data-k="manager_share_pct">Share of season %</th>
+          <th data-k="pep_index">Pep Index</th>
+          <th data-k="tempo_score">Tempo</th>
+          <th data-k="patience_score">Patience</th>
+          <th data-k="retention_score">Retention</th>
+          <th data-k="passes_per_shot">Passes /shot</th>
+          <th data-k="passes_per_xg">Passes /xG</th>
+          <th data-k="headed_goal_share_pct">Headed goals %</th>
+          <th data-k="rank_v2">v2 rank</th>
+          <th data-k="rank_resource_adj">Adj. rank</th>
+          <th data-k="pep_index_resource_adj">Adj. index</th>
+          <th data-k="possession_pct">Poss %</th>
+          <th data-k="pass_accuracy_pct">Pass acc %</th>
+          <th data-k="passes_per_match">Passes /match</th>
+          <th data-k="final_third_passes_per_match">Final-3rd passes /match</th>
+          <th data-k="long_ball_share_pct">Long-ball %</th>
+          <th data-k="gk_long_ball_share_pct">GK long %</th>
+          <th data-k="xg_chain_per_xg">xGChain / xG</th>
+          <th data-k="xg_buildup_share_pct">Buildup share %</th>
+          <th data-k="high_regain_share_pct">High-regain %</th>
+          <th data-k="high_regains_per_match">High regains /match</th>
+          <th data-k="points_per_game">PPG</th>
+          <th data-k="goal_diff_per_game">GD /game</th>
+        </tr></thead>
+        <tbody data-draw="rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <details class="pi-card pi-details" id="method">
+    <summary>How the index is built: metrics, weights and caveats</summary>
+    <p>Pep Index (v3, blended tempo). Weights in brackets; every metric is a z-score within its league and season.</p>
+    <dl>
+      <dt>Tempo (×3)</dt><dd>An equal blend of two halves. <b>Patience</b>: passes per shot, adjusted for attacking output, because the raw ratio also rises when a team simply creates little. <b>Retention</b>: passes per match, pass accuracy, long-ball share (negative) and chipped-pass share (negative). Set pieces drag patience down, since corners and free kicks produce shots with almost no passes; retention isn't affected by them.</dd>
+      <dt>Poss % (×1.5)</dt><dd>Share of possession.</dd>
+      <dt>xGChain / xG (×1)</dt><dd>Sum of every player's xGChain ÷ team xG: roughly how many players touch the ball in a move that ends in a shot. Stands in for possession-sequence length.</dd>
+      <dt>Buildup share % (×1)</dt><dd>xGBuildup ÷ xGChain: the share of attacking involvement that comes from build-up rather than the final pass or shot.</dd>
+      <dt>GK long % (×−0.5)</dt><dd>Goalkeepers' long balls as a share of their passes.</dd>
+      <dt>High-regain % (×−0.5)</dt><dd>Possession won in the attacking third as a share of all recoveries: the Red Bull/Klopp signature.</dd>
+      <dt>Headed goals %</dt><dd>Headed goals as a share of all goals. Not part of the index; a rough sign of how much a side scores from set pieces, shown so you can see where patience may be understated.</dd>
+      <dt>v2 rank</dt><dd>The previous version, which used passes per shot alone for tempo. Kept for comparison.</dd>
+      <dt>Adjusted index</dt><dd>What's left of the index after a linear fit on the log of minutes-weighted average player value (EA FC 26 valuations). It separates style from squad resources.</dd>
+    </dl>
+    <p>Caveats:</p>
+    <ul>
+      <li>Team stats belong to clubs, not coaches. Where a club changed coach mid-season, the row blends several coaches (see Share of season %). For example, Real Madrid 2025–26 is Alonso 53% and Arbeloa 47%.</li>
+      <li>Opta's direct speed, sequences per possession and true field tilt aren't public. The metrics here are the best public stand-ins.</li>
+      <li>Shot counts include set pieces, which public data can't separate out. Sides that take many shots from corners and free kicks look faster on passes per shot than their open play really is; blending in retention reduces this but can't remove it entirely.</li>
+      <li>League-relative scoring treats each league on its own terms. A 55% possession side in the Bundesliga isn't compared directly with one in La Liga.</li>
+    </ul>
+  </details>
+</div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    Data: player-season statistics from <a href="https://www.sofascore.com">SofaScore</a>, <a href="https://understat.com">Understat</a> and <a href="https://fbref.com">FBref</a>, compiled in the community dataset <a href="https://github.com/m-mahadi/top5-football-dataset">m-mahadi/top5-football-dataset</a>; player values from EA FC via SoFIFA. Coach tenures from Wikipedia. Team aggregation, indices and clustering by FourThreeThree. Exploratory analysis, not official statistics.
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
